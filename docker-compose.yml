@@ -70,9 +70,45 @@ services:
     networks: 
       - social
 
+  wordpress-mysql:
+    image: mysql:5.7
+    container_name: wordpress-mysql 
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: always
+    ports: 
+     - '3310:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: root
+    networks:
+      - social
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    ports:
+      - "3000:80"
+    restart: always
+    depends_on:
+      - wordpress-mysql
+    volumes:
+      - ./data/wordpress/wp-content:/var/www/html/wp-content
+      - ./data/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: wordpress-mysql:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - social
+
 networks:
   social:
-    external: true
+    name: social
+    driver: bridge
 
       
 

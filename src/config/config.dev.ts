@@ -20,11 +20,11 @@ export const dev = {
         pass: 'root',
     },
     wordpressDb: {
-        username: "root",
+        username: "wordpress",
         password: "root",
         database: "wordpress",
         host: "127.0.0.1",
-        port: 3313,
+        port: 3310,
         dialect: "mysql"
     },
     jwt: {

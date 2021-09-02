@@ -1,6 +1,5 @@
-import FacebookService from "../services/facebookService";
+import { FacebookId } from "../models/facebookId"
 
-const facebookService = new FacebookService();
 const ids = [
     '100044226139684',
     '46251501064',
@@ -13,7 +12,10 @@ const ids = [
 
 export default async function facebookIdSeed(){
     for(let id of ids){
-        await facebookService.createFacebookId(id) 
+        const facebookId = await FacebookId.findOne({id: id})
+        if(!facebookId){
+            await FacebookId.create({id: id})
+        }
     }
     console.log('insert facebook ids done!')
 }

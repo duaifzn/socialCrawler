@@ -1,6 +1,5 @@
-import InstagramService from "../services/instagramService";
+import { InstagramUserName } from "../models/instagramUserName";
 
-const instagramService = new InstagramService();
 const userNames = [
     'krystalllll_823',
     'tsai_ingwen',
@@ -11,9 +10,9 @@ const userNames = [
 
 export default async function instagramUserNameSeed(){
     for(let name of userNames){
-        let [data, err] = await instagramService.createInstagramUserName(name)
-        if(err){
-            console.error(err)
+        const instagramUserName = await InstagramUserName.findOne({userName: name})
+        if(!instagramUserName){
+            await InstagramUserName.create({userName: name})
         }
     }
     console.log('insert Instagram User Name done!')

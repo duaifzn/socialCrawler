@@ -10,15 +10,10 @@ const ids = [
     '100044524715843',
     '100044596112172'
 ];
-async function timeout(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-(async () =>{
-    await timeout(5000);
+export default async function facebookIdSeed(){
     for(let id of ids){
         await facebookService.createFacebookId(id) 
     }
-    console.log('insert facebook ids done')
-    process.exit(0)
-})()
+    console.log('insert facebook ids done!')
+}

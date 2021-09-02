@@ -8,18 +8,13 @@ const userNames = [
     'doctorkowj',
     'vickybaby61'
 ];
-async function timeout(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-(async () =>{
-    await timeout(5000);
+export default async function instagramUserNameSeed(){
     for(let name of userNames){
         let [data, err] = await instagramService.createInstagramUserName(name)
         if(err){
             console.error(err)
         }
     }
-    console.log('insert Instagram User Name done')
-    process.exit(0)
-})()
+    console.log('insert Instagram User Name done!')
+}

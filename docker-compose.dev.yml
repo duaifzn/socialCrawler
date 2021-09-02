@@ -1,0 +1,101 @@
+version: "3.7"
+
+services:
+  
+  social-fb-cronjob:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social-fb-cronjob
+    restart: always
+    expose:
+      - "3000"
+    command: npm run start:fb
+    depends_on:
+     - social-mongo
+    networks:
+      - social
+
+  # social-ig-cronjob:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: social-ig-cronjob
+  #   restart: always
+  #   ports:
+  #     - ":3000"
+  #   command: npm run start:fb
+  #   depends_on:
+  #     - social-mongo
+  #   networks:
+  #     - social
+
+  # social-yt-cronjob:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: social-yt-cronjob
+  #   restart: always
+  #   ports:
+  #     - ":3000"
+  #   command: npm run start:fb
+  #   depends_on:
+  #     - social-mongo
+  #   networks:
+  #     - social
+
+  social-mongo:
+    image: mongo
+    container_name: social-mongo
+    restart: always
+    ports:
+      - "27020:27017"
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: admin
+    networks: 
+      - social
+
+  wordpress-mysql:
+    image: mysql:5.7
+    container_name: wordpress-mysql 
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: always
+    ports: 
+     - '3310:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: root
+    networks:
+      - social
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    ports:
+      - "3000:80"
+    restart: always
+    depends_on:
+      - wordpress-mysql
+    volumes:
+      - ./data/wordpress/wp-content:/var/www/html/wp-content
+      - ./data/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: wordpress-mysql:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - social
+
+networks:
+  social:
+    name: social
+    driver: bridge
+
+      
+
